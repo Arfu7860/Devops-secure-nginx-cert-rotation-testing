@@ -1,0 +1,1 @@
+[GENERATE THIS VIA `openssl req -x509 -newkey rsa:4096 -sha256 -days 1 -nodes -keyout site.key -out site.crt -subj "/CN=localhost"` IN A SCRATCH DIRECTORY]

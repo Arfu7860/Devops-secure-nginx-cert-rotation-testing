@@ -1,0 +1,37 @@
+Context: |
+  You are an on-call engineer for a web service. The web service, running in a Docker container, uses a self-signed TLS certificate that is about to expire. Your task is to rotate the certificate. The service is managed by a `docker-compose` file.
+
+  The existing certificate and key are located at `/etc/nginx/certs/site.crt` and `/etc/nginx/certs/site.key` within the container and are mounted from the `data/certs` directory in the host. The NGINX configuration is mounted from `configs/nginx.conf`.
+
+Objectives:
+- Generate a new self-signed TLS certificate and private key.
+- Update the application's configuration to use the new certificate and key.
+- Restart the application using `docker-compose` to apply the changes.
+
+Constraints:
+- You must use `openssl` to generate the new certificate.
+- The new certificate and key must be named `new_site.crt` and `new_site.key` and placed in the `data/certs` directory.
+- The new certificate must be valid for at least 365 days.
+- The NGINX configuration file (`configs/nginx.conf`) must be updated to reference the new certificate and key.
+- The environment is completely offline. No external network calls are allowed.
+- You can use the `docker-compose` command.
+- max_agent_timeout_sec: 300
+- max_test_timeout_sec: 120
+
+Acceptance Criteria:
+- The new certificate `new_site.crt` and private key `new_site.key` exist in the `data/certs` directory.
+- The NGINX configuration file (`configs/nginx.conf`) is updated to point to `new_site.crt` and `new_site.key`.
+- The `nginx` service is restarted with the new configuration and certificates.
+- The running `nginx` service serves a valid TLS certificate with a future expiry date on port 8443.
+
+Inputs/Materials:
+- `docker-compose.yaml`: Defines the service.
+- `Dockerfile`: Specifies the NGINX image.
+- `configs/nginx.conf`: NGINX server block configuration.
+- `data/certs/site.crt`: Expired initial certificate.
+- `data/certs/site.key`: Expired initial key.
+- `run-tests.sh`: Script to run the test suite.
+- `tests/test_outputs.py`: Test suite that verifies the solution.
+
+Outputs:
+- A running `nginx` service accessible via HTTPS on port 8443 serving the newly generated certificate.
